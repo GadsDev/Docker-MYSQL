@@ -1,0 +1,42 @@
+# We're using version 3.7 of the Docker Compose file format
+version: "3.7"
+
+# Define services/containers
+services:
+  # MySQL container
+  mysql:
+    # Use mysql:8.0.19 image
+    image: mysql:5.7
+    # Connect to "my-network" network, as defined below
+    networks:
+      - gadsdev-network
+    # Pass a list of environment variables to the container
+    environment:
+      MYSQL_ROOT_PASSWORD: 250433
+      MYSQL_DATABASE: app_db
+      MYSQL_USER: gadsdev
+      MYSQL_PASSWORD: 250433
+    ports:
+      - "3306:3306"
+  # phpMyAdmin container
+  phpmyadmin:
+    # Use phpmyadmin/phpmyadmin:5.0.2 image
+    image: phpmyadmin/phpmyadmin:5.0.2
+    # Connect to "my-network" network, as defined below
+    networks:
+      - gadsdev-network
+    # Map port 8080 on the host to port 80 inside the container
+    # Syntax is: "HOST_PORT:CONTAINER_PORT"
+    ports:
+      - "8087:80"
+    # Pass a list of environment variables to the container
+    environment:
+      PMA_HOST: mysql
+      UPLOAD_LIMIT: 1G
+    # Wait for "mysql" container to start first 
+    depends_on:
+      - mysql
+
+# Define networks
+networks:
+  gadsdev-network:
