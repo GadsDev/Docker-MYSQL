@@ -12,10 +12,10 @@ services:
       - gadsdev-network
     # Pass a list of environment variables to the container
     environment:
-      MYSQL_ROOT_PASSWORD: 250433
+      MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: app_db
       MYSQL_USER: gadsdev
-      MYSQL_PASSWORD: 250433
+      MYSQL_PASSWORD: password
     ports:
       - "3306:3306"
   # phpMyAdmin container
@@ -39,7 +39,7 @@ services:
   redis:
     image: "redis:alpine"
 
-    command: redis-server --requirepass 250433
+    command: redis-server --requirepass password
 
     ports:
      - "6379:6379"
