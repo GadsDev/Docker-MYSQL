@@ -9,12 +9,12 @@ services:
     image: mysql:5.7
     # Connect to "my-network" network, as defined below
     networks:
-      - gadsdev-network
+      - personal-network
     # Pass a list of environment variables to the container
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: app_db
-      MYSQL_USER: gadsdev
+      MYSQL_USER: personal
       MYSQL_PASSWORD: password
     ports:
       - "3306:3306"
@@ -24,7 +24,7 @@ services:
     image: phpmyadmin/phpmyadmin:5.0.2
     # Connect to "my-network" network, as defined below
     networks:
-      - gadsdev-network
+      - personal-network
     # Map port 8080 on the host to port 80 inside the container
     # Syntax is: "HOST_PORT:CONTAINER_PORT"
     ports:
@@ -32,8 +32,8 @@ services:
     # Pass a list of environment variables to the container
     environment:
       PMA_HOST: mysql
-      UPLOAD_LIMIT: 1G
-    # Wait for "mysql" container to start first 
+      UPLOAD_LIMIT: 10G
+    # Wait for "mysql" container to start first
     depends_on:
       - mysql
   redis:
@@ -42,18 +42,22 @@ services:
     command: redis-server --requirepass password
 
     ports:
-     - "6379:6379"
+      - "6379:6379"
 
     volumes:
-     - $PWD/redis-data:/var/lib/redis
-     - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
+      - $PWD/redis-data:/var/lib/redis
+      - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
 
     environment:
-     - REDIS_REPLICATION_MODE=master
+      - REDIS_REPLICATION_MODE=master
 
     networks:
-      gadsdev-network:
-
-# Define networks
+      personal-network:
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui
+# Define networks INDEX -> http://127.0.0.1/s2d/public/index.php
 networks:
-  gadsdev-network:
+  personal-network:
